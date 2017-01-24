@@ -56,7 +56,7 @@ ip du serveur repondant.
 
 ## Adjectifs par défaut
 
-Par défaut on utilise la liste suivant d'adjectifs (dans la lague de Shakespeare):
+Par défaut on utilise la liste suivant d'adjectifs (dans la langue de Shakespeare):
 
 + great
 + boring
