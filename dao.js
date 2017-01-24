@@ -1,7 +1,7 @@
-const ADJECTIVES = require('./adjectives');
+const NOUNS = require('./nouns');
 
 /**
- * inner class used in getRandAdjective
+ * inner class used in getRandWord
  * it is used only as immutable store of data,
  * and as a replacement for a real DB.
  * 
@@ -10,7 +10,7 @@ const ADJECTIVES = require('./adjectives');
 function Store() {
     const creationDate = new Date();
     this._store = [{
-        data: ADJECTIVES,
+        data: NOUNS,
         createdAt: creationDate,
         changedAt: creationDate,
     }];
@@ -58,7 +58,7 @@ function Dao(InjectedStore) {
     this.store = OptionnalyFakeStore;
 }
 /**
- * @return {Promise<String>} it resolves to a random adjective from the store
+ * @return {Promise<String>} it resolves to a random noun from the store
  * @see Store.get
  */
 Dao.prototype.getRandWord = function () {

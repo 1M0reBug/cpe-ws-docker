@@ -11,12 +11,12 @@ Les éléments requis sont:
 Si à l'issue de l'installation vous êtes capables de lancer le hello world, c'est l'essentiel, ce 
 n'est pas la peine de chercher plus loin.
 
-## Application - branche `adjective`
+## Application - branche `nouns`
 
 L'application que l'on va utiliser est un petit serveur nodejs. Si vous ne connaissez pas
 (ou n'aimez pas/détestez) Javascript, ne vous inquiétez pas, on aurait très bien pu faire ça dans
 n'importe quel autre langage.
-L'application suivra le concept du [cadavre exquis][cadavre-exquis-wiki]: (Nom, Adjectif, Verbe,
+L'application suivra le concept du [cadavre exquis][cadavre-exquis-wiki]: (*Nom*, Adjectif, Verbe,
 Complément),chacun contenu dans un service différent.
 Ce serveur web est une API REST avec quelques endpoints permettant de modifier une partie du jeu.
 
@@ -25,40 +25,39 @@ Ce serveur web est une API REST avec quelques endpoints permettant de modifier u
 ### GET /
 
 + Response 200 (`application/json`)
-Retourne un adjectif au hasard
+Retourne un nom au hasard
 
 ```json
 {
-   "adjective": "beautiful",
+   "noun": "dog",
     "ip": "192.168.0.33"
 }
 ```
 
 ### POST /
 
-Lorsqu'on ajoute un nouvel adjectif, la réponse consiste à le renvoyer, avec l'adresse
+Lorsqu'on ajoute un nouveau nom, la réponse consiste à le renvoyer, avec l'adresse
 ip du serveur repondant.
 
 + Body
 ```json
 {
-    "adjective": "marvelous"
+    "noun": "fish"
 }
 ```
 
 + Reponse 200 (`application/json`)
 ```json
 {
-    "adjective": "marvelous",
+    "noun": "fish",
     "ip": "192.168.0.33"
 }
 ```
 
-## Adjectifs par défaut
+## Noms par défaut
 
-Par défaut on utilise la liste suivant d'adjectifs (dans la langue de Shakespeare):
+Par défaut on utilise la liste suivant de noms (dans la langue de Shakespeare):
 
-+ great
-+ boring
-+ beautiful
-+ mesmerizing
++ dog
++ cat
++ Jean-Louis
