@@ -11,7 +11,7 @@ Les éléments requis sont:
 Si à l'issue de l'installation vous êtes capables de lancer le hello world, c'est l'essentiel, ce 
 n'est pas la peine de chercher plus loin.
 
-## Application - branche `adjective`
+## Application - branche `adjectives`
 
 [![Travis CI][travis-badge-url]][travis-url]
 [![Coverage][coveralls-badge-url]][coveralls-url]
@@ -25,10 +25,10 @@ Ce serveur web est une API REST avec quelques endpoints permettant de modifier u
 
 
 [cadavre-exquis-wiki]: https://www.wikiwand.com/fr/Cadavre_exquis_(jeu)
-[travis-badge-url]: https://api.travis-ci.org/1M0reBug/cpe-ws-docker.svg?branch=nouns
+[travis-badge-url]: https://api.travis-ci.org/1M0reBug/cpe-ws-docker.svg?branch=adjectives
 [travis-url]: https://travis-ci.org/1M0reBug/cpe-ws-docker
-[coveralls-badge-url]: https://coveralls.io/repos/github/1M0reBug/cpe-ws-docker/badge.svg?branch=nouns
-[coveralls-url]: https://coveralls.io/github/1M0reBug/cpe-ws-docker?branch=nouns
+[coveralls-badge-url]: https://coveralls.io/repos/github/1M0reBug/cpe-ws-docker/badge.svg?branch=adjectives
+[coveralls-url]: https://coveralls.io/github/1M0reBug/cpe-ws-docker?branch=adjectives
 
 ### GET /
 
