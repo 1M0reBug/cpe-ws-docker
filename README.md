@@ -11,7 +11,7 @@ Les éléments requis sont:
 Si à l'issue de l'installation vous êtes capables de lancer le hello world, c'est l'essentiel, ce 
 n'est pas la peine de chercher plus loin.
 
-## Application - branche `nouns`
+## Application - branche `verbs`
 
 [![Travis CI][travis-badge-url]][travis-url]
 [![Coverage][coveralls-badge-url]][coveralls-url]
@@ -25,10 +25,10 @@ Ce serveur web est une API REST avec quelques endpoints permettant de modifier u
 
 
 [cadavre-exquis-wiki]: https://www.wikiwand.com/fr/Cadavre_exquis_(jeu)
-[travis-badge-url]: https://api.travis-ci.org/1M0reBug/cpe-ws-docker.svg?branch=nouns
+[travis-badge-url]: https://api.travis-ci.org/1M0reBug/cpe-ws-docker.svg?branch=verbs
 [travis-url]: https://travis-ci.org/1M0reBug/cpe-ws-docker
-[coveralls-badge-url]: https://coveralls.io/repos/github/1M0reBug/cpe-ws-docker/badge.svg?branch=nouns
-[coveralls-url]: https://coveralls.io/github/1M0reBug/cpe-ws-docker?branch=nouns
+[coveralls-badge-url]: https://coveralls.io/repos/github/1M0reBug/cpe-ws-docker/badge.svg?branch=verbs
+[coveralls-url]: https://coveralls.io/github/1M0reBug/cpe-ws-docker?branch=verbs
 
 ### GET /
 
@@ -37,7 +37,7 @@ Retourne un nom au hasard
 
 ```json
 {
-   "noun": "dog",
+   "verb": "dog",
     "ip": "192.168.0.33"
 }
 ```
@@ -50,22 +50,22 @@ ip du serveur repondant.
 + Body
 ```json
 {
-    "noun": "fish"
+    "verb": "fish"
 }
 ```
 
 + Reponse 200 (`application/json`)
 ```json
 {
-    "noun": "fish",
+    "verb": "fish",
     "ip": "192.168.0.33"
 }
 ```
 
 ## Noms par défaut
 
-Par défaut on utilise la liste suivant de noms (dans la langue de Shakespeare):
+Par défaut on utilise la liste suivant de verbes (dans la langue de Shakespeare):
 
-+ dog
-+ cat
-+ Jean-Louis
++ eats
++ walks
++ sleeps

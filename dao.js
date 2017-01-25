@@ -1,4 +1,4 @@
-const NOUNS = require('./nouns');
+const VERBS = require('./verbs');
 
 /**
  * inner class used in getRandWord
@@ -10,7 +10,7 @@ const NOUNS = require('./nouns');
 function Store() {
     const creationDate = new Date();
     this._store = [{
-        data: NOUNS,
+        data: VERBS,
         createdAt: creationDate,
         changedAt: creationDate,
     }];
@@ -58,7 +58,7 @@ function Dao(InjectedStore) {
     this.store = OptionnalyFakeStore;
 }
 /**
- * @return {Promise<String>} it resolves to a random noun from the store
+ * @return {Promise<String>} it resolves to a random verb from the store
  * @see Store.get
  */
 Dao.prototype.getRandWord = function () {

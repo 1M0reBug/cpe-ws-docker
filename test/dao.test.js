@@ -3,7 +3,7 @@ const sinon = require('sinon');
 
 const Store = require('../dao').Store;
 const Dao = require('../dao');
-const NOUNS = require('../nouns');
+const VERBS = require('../verbs');
 
 describe('Dao', () => {
     it ('should create an instance of Dao', () => {
@@ -28,7 +28,7 @@ describe('Dao', () => {
                 });
         });
 
-        it ('should return something from the NOUNS list and use Store', (done) => {
+        it ('should return something from the VERBS list and use Store', (done) => {
             const fixture = new Store();
             const getSpy = sinon.spy(fixture, 'get');
             const sizeSpy = sinon.spy(fixture, 'size');
@@ -36,7 +36,7 @@ describe('Dao', () => {
             const testDao = new Dao(fixture);
             testDao.getRandWord()
                 .then(word => {
-                    expect(word).to.be.oneOf(NOUNS);
+                    expect(word).to.be.oneOf(VERBS);
                     expect(getSpy.called).to.be.true;
                     expect(sizeSpy.called).to.be.true;
                     done();

@@ -27,9 +27,9 @@ describe ('REST API', () => {
                 .expect('Content-Type', /json/)
                 .end((err, res) => {
                     expect(err).to.not.exist;
-                    expect(res.body).to.have.property('noun');
+                    expect(res.body).to.have.property('verb');
                     expect(res.body).to.have.property('ip');
-                    expect(res.body.noun).to.be.a('string');
+                    expect(res.body.verb).to.be.a('string');
                     expect(res.body.ip).to.match(/^(?:\d{1,3}\.){3}\d{1,3}$/);
                     done();
                 });
@@ -40,14 +40,14 @@ describe ('REST API', () => {
         it ('should return a random word and an ip address', (done) => {
             request(url)
                 .post('/')
-                .send({ noun: 'awesome' })
+                .send({ verb: 'awesome' })
                 .expect(200)
                 .expect('Content-Type', /json/)
                 .end((err, res) => {
                     expect(err).to.not.exist;
-                    expect(res.body).to.have.property('noun');
+                    expect(res.body).to.have.property('verb');
                     expect(res.body).to.have.property('ip');
-                    expect(res.body.noun).to.be.a('string');
+                    expect(res.body.verb).to.be.a('string');
                     expect(res.body.ip).to.match(/^(?:\d{1,3}\.){3}\d{1,3}$/);
                     done();
                 });

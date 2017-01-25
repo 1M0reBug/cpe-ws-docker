@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const NOUNS = require('../nouns');
+const VERBS = require('../verbs');
 
 const Store = require('../dao').Store;
 
@@ -13,7 +13,7 @@ describe ('Store', () => {
     });
 
     it ('should contain an initial list of words', () => {
-        expect(store.store.data).to.be.eql(NOUNS);
+        expect(store.store.data).to.be.eql(VERBS);
     });
 
     it ('inner store should be a store type', () => {
@@ -72,7 +72,7 @@ describe ('Store', () => {
 
     describe ('#size()', () => {
         it ('should return the number of elements', () => {
-            const expected = NOUNS.length;
+            const expected = VERBS.length;
             expect(store.size()).to.be.equal(expected);
         });
 
