@@ -7,7 +7,7 @@ const Dao = require('./dao');
 const dao = new Dao();
 
 app.set('env', process.env.NODE_ENV || 'development');
-if (process.env.NODE_ENV !== 'production') app.use(logger('dev'));
+if (process.env.NODE_ENV !== 'test') app.use(logger('dev'));
 app.use(bodyParser.json());
 
 app.get('/', (req, res, next) => {
@@ -62,7 +62,7 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(3000, () => {
-    if (process.env.NODE_ENV !== 'production') console.log('Listening on 0.0.0.0:3000');
+    if (process.env.NODE_ENV !== 'test') console.log('Listening on 0.0.0.0:3000');
 });
 
 module.exports = app;

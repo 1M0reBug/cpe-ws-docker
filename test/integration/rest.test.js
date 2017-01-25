@@ -1,4 +1,4 @@
-process.env.NODE_ENV = 'production'; // we shut the logger
+process.env.NODE_ENV = 'test'; // we shut the logger
 const expect = require('chai').expect;
 const request = require('supertest');
 
