@@ -11,6 +11,44 @@ Les éléments requis sont:
 Si à l'issue de l'installation vous êtes capables de lancer le hello world, c'est l'essentiel, ce 
 n'est pas la peine de chercher plus loin.
 
+Une clef USB sera passée pour installer les images nécessaires et éviter de compter sur le réseau.
+pour ce faire récupérez le dossier cpe-ws-docker sur votre ordinateur et lancer un terminal dans
+le dossier (**sur votre ordinateur !**). Une fois que c'est fait vous pouvez lancer un
+
+```shell
+$ cd ~/Documents/src/cpe-ws-docker/
+$ sudo docker load -i images.tar
+``` 
+
+sinon vous pouvez les installer à l'avance:
+
++ `sudo docker pull node:7.4.0-alpine`
+
+## Build automatisé
+
+Pour builder l'API REST dans un container il suffit de lancer:
+
+```shell
+$ sudo ./build.sh
+```
+
+Lors du premier lancement docker va se charger d'aller récupérer les images indiquées dans le
+`Dockerfile` sur [hub.docker.com](https://hub.docker.com/), ou les récupérer sur votre ordinateur si
+elle a déjà été téléchargée (voir ci-dessus).
+
+Le script se contente de créer un nom pour l'image qu'il va builder et de lancer les 2 commandes
+nécessaire pour builder et lancer.
+À but pédagogique je vous invite à aller le visualiser.
+
+Si vous lancer le script plusieurs fois, vous risquez de vous retrouver avec pas mal d'images
+parasites.
+Vous pouver alors arrêter l'application qui tourne (ce qui va supprimer l'image actuellement
+utilisée) à l'aide d'un bon vieux `Ctrl+C`, et lancer 
+
+```shell
+$ sudo ./build.sh clean
+```
+
 ## Application - branche `nouns`
 
 [![Travis CI][travis-badge-url]][travis-url]
