@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "mocha",
-    "test:dev": "mocha --watch --reporter dot"
+    "test": "mocha --reporter spec --check-leaks test/ test/integration/",
+    "test:dev": "mocha --watch --reporter dot test/",
+    "test:ci": "istanbul cover node_modules/.bin/_mocha --report lcovonly -- --check-leaks test/ test/integration/"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +19,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "sinon": "^1.17.7",
     "supertest": "^2.0.1"

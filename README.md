@@ -13,6 +13,9 @@ n'est pas la peine de chercher plus loin.
 
 ## Application - branche `nouns`
 
+[![Travis CI][travis-badge-url]][travis-url]
+[![Coverage][coveralls-badge-url]][coveralls-url]
+
 L'application que l'on va utiliser est un petit serveur nodejs. Si vous ne connaissez pas
 (ou n'aimez pas/détestez) Javascript, ne vous inquiétez pas, on aurait très bien pu faire ça dans
 n'importe quel autre langage.
@@ -20,7 +23,12 @@ L'application suivra le concept du [cadavre exquis][cadavre-exquis-wiki]: (*Nom*
 Complément),chacun contenu dans un service différent.
 Ce serveur web est une API REST avec quelques endpoints permettant de modifier une partie du jeu.
 
+
 [cadavre-exquis-wiki]: https://www.wikiwand.com/fr/Cadavre_exquis_(jeu)
+[travis-badge-url]: https://api.travis-ci.org/1M0reBug/cpe-ws-docker.svg?branch=nouns
+[travis-url]: https://travis-ci.org/1M0reBug/cpe-ws-docker
+[coveralls-badge-url]: https://coveralls.io/repos/github/1M0reBug/cpe-ws-docker/badge.svg?branch=nouns
+[coveralls-url]: https://coveralls.io/github/1M0reBug/cpe-ws-docker?branch=nouns
 
 ### GET /
 
