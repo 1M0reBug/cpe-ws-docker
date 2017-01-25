@@ -2,7 +2,7 @@ process.env.NODE_ENV = 'production'; // we shut the logger
 const expect = require('chai').expect;
 const request = require('supertest');
 
-const url = require('../index');
+const url = require('../../index');
 
 describe ('REST API', () => {
     describe ('GET /hello', () => {
