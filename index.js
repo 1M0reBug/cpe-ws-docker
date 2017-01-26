@@ -24,7 +24,6 @@ app.get('/', (req, res, next) => {
 app.post('/', (req, res, next) => {
     const adjective = req.body.adjective;
     dao.push(adjective)
-        .then(() => dao.exists(adjective))
         .then(() => res.json({ adjective: adjective, ip: ip.address() }))
         .catch(() => {
             const err = new Error(`${adjective} could not be added properly`);

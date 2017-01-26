@@ -6,7 +6,7 @@ services:
         image: ${CONTAINER_NAME_PREFIX}/${CURRENT_BRANCH}
         container_name: ${CURRENT_BRANCH}
         environment:
-            NODE_ENV: production
+            # NODE_ENV: production
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
@@ -27,7 +27,11 @@ services:
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
+        ports:
+            - "3306:3306"
         networks:
             - app.private
+        volumes:
+            - ${PWD}/mysql:/var/lib/mysql
 networks:
     app.private:
