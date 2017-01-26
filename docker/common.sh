@@ -11,8 +11,8 @@ export MYSQL_DATABASE="$CURRENT_BRANCH"
 
 ## TO MODIFY
 WORDS=$(cat<<WORDLIST
-dog
-cat
-Jean-Louis
+eats
+walks
+sleeps
 WORDLIST
 );

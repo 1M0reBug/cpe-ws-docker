@@ -85,7 +85,7 @@ utilisée) à l'aide d'un bon vieux `Ctrl+C`, et lancer
 $ sudo ./build.sh clean
 ```
 
-## Application - branche `nouns`
+## Application - branche `verbs`
 
 L'application que l'on va utiliser est un petit serveur nodejs. Si vous ne connaissez pas
 (ou n'aimez pas/détestez) Javascript, ne vous inquiétez pas, on aurait très bien pu faire ça dans
@@ -104,7 +104,7 @@ Retourne un nom au hasard
 
 ```json
 {
-   "noun": "dog",
+   "verb": "eats",
     "ip": "192.168.0.33"
 }
 ```
@@ -117,25 +117,25 @@ ip du serveur repondant.
 + Body
 ```json
 {
-    "noun": "fish"
+    "verb": "runs"
 }
 ```
 
 + Reponse 200 (`application/json`)
 ```json
 {
-    "noun": "fish",
+    "verb": "runs",
     "ip": "192.168.0.33"
 }
 ```
 
 ## Noms par défaut
 
-Par défaut on utilise la liste suivant de noms (dans la langue de Shakespeare):
+Par défaut on utilise la liste suivant de verbes (dans la langue de Shakespeare):
 
-+ dog
-+ cat
-+ Jean-Louis
++ eats
++ walks
++ sleeps
 
 ## Note
 
