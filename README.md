@@ -11,7 +11,6 @@ Les éléments requis sont:
 Si à l'issue de l'installation vous êtes capables de lancer le hello world, c'est l'essentiel, ce 
 n'est pas la peine de chercher plus loin.
 
-
 Une clef USB sera passée pour installer les images nécessaires et éviter de compter sur le réseau.
 pour ce faire récupérez le dossier cpe-ws-docker sur votre ordinateur et lancer un terminal dans
 le dossier (**sur votre ordinateur !**). Une fois que c'est fait vous pouvez lancer un
@@ -24,8 +23,44 @@ $ sudo docker load -i images.tar
 sinon vous pouvez les installer à l'avance:
 
 + `sudo docker pull node:7.4.0-alpine`
++ `sudo docker pull mariadb:10.1.21`
+
+## But
+
+Sur ce commit application utilise 2 containers, un contenant notre application nodejs
+et l'autre la base de données [MariaDB][mariadb-image].
+
+À l'aide de la [documentation de l'image][mariadb-image] et des scripts `docker/common.sh` et
+`docker/db/build.sh`, il va vous falloir rédiger un Dockerfile permettant de créer un container
+autonome qui pourra communiquer avec le container applicatif (ici `adjectives`).
+
+La requête que l'on veux exécuter au démarrage du container :
+
+```sql
+CREATE TABLE IF NOT EXISTS adjectives (
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    word varchar(255) NOT NULL
+);
+
+INSERT INTO adjectives (word) VALUES ('great');
+INSERT INTO adjectives (word) VALUES ('boring');
+INSERT INTO adjectives (word) VALUES ('beautiful');
+INSERT INTO adjectives (word) VALUES ('mesmerizing');
+```
+
+L'idée est que notre application est maintenant capable d'utiliser les variables d'environnement que
+l'on a définit pour communiquer avec la BDD.
+Petite astuce vous noterez l'attribut `--link` lors du run de l'application. 
+Ceci permet aux containers de se retrouver par leur noms. On verra plus tard comment aller encore
+plus loin avec ce mécanisme (link est plus ou moins déprécié).
+
+*INDICE*: Cette partie est plus ou moins une question piège, à vous de trouver pourquoi.
+
+[mariadb-image]: https://hub.docker.com/_/mariadb/ 
 
 ## Build automatisé
+
+### Application
 
 Pour builder l'API REST dans un container il suffit de lancer:
 
@@ -50,10 +85,7 @@ utilisée) à l'aide d'un bon vieux `Ctrl+C`, et lancer
 $ sudo ./build.sh clean
 ```
 
-## Application - branche `verbs`
-
-[![Travis CI][travis-badge-url]][travis-url]
-[![Coverage][coveralls-badge-url]][coveralls-url]
+## Application - branche `adjectives`
 
 L'application que l'on va utiliser est un petit serveur nodejs. Si vous ne connaissez pas
 (ou n'aimez pas/détestez) Javascript, ne vous inquiétez pas, on aurait très bien pu faire ça dans
@@ -64,10 +96,6 @@ Ce serveur web est une API REST avec quelques endpoints permettant de modifier u
 
 
 [cadavre-exquis-wiki]: https://www.wikiwand.com/fr/Cadavre_exquis_(jeu)
-[travis-badge-url]: https://api.travis-ci.org/1M0reBug/cpe-ws-docker.svg?branch=verbs
-[travis-url]: https://travis-ci.org/1M0reBug/cpe-ws-docker
-[coveralls-badge-url]: https://coveralls.io/repos/github/1M0reBug/cpe-ws-docker/badge.svg?branch=verbs
-[coveralls-url]: https://coveralls.io/github/1M0reBug/cpe-ws-docker?branch=verbs
 
 ### GET /
 
@@ -76,7 +104,7 @@ Retourne un nom au hasard
 
 ```json
 {
-   "verb": "dog",
+   "verb": "eats",
     "ip": "192.168.0.33"
 }
 ```
@@ -89,14 +117,14 @@ ip du serveur repondant.
 + Body
 ```json
 {
-    "verb": "fish"
+    "verb": "runs"
 }
 ```
 
 + Reponse 200 (`application/json`)
 ```json
 {
-    "verb": "fish",
+    "verb": "runs",
     "ip": "192.168.0.33"
 }
 ```
@@ -108,3 +136,7 @@ Par défaut on utilise la liste suivant de verbes (dans la langue de Shakespeare
 + eats
 + walks
 + sleeps
+
+## Note
+
+On a supprimé les tests qui prenaient trop de temps à maintenir.
