@@ -4,10 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "mocha --reporter spec --check-leaks test/ test/integration/",
-    "test:dev": "mocha --watch --reporter dot test/",
-    "test:ci": "istanbul cover node_modules/.bin/_mocha --report lcovonly -- --check-leaks test/ test/integration/"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,7 +12,8 @@
     "body-parser": "^1.16.0",
     "express": "^4.14.0",
     "ip": "^1.1.4",
-    "morgan": "^1.7.0"
+    "morgan": "^1.7.0",
+    "mysql": "^2.13.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",

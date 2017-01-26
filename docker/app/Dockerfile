@@ -4,7 +4,8 @@ LABEL maintainer "jordan.quagliatini@gmail.com"
 ENV NODE_ENV "production"
 
 WORKDIR /usr/src/${CURRENT_BRANCH}
-ADD ./*js \
+ADD dao.js \
+    index.js \
     package.json \
     ./
 
