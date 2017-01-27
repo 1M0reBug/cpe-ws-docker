@@ -37,7 +37,7 @@ autonome qui pourra communiquer avec le container applicatif (ici `adjectives`).
 La requête que l'on veux exécuter au démarrage du container :
 
 ```sql
-CREATE TABLE IF NOT EXISTS adjectives (
+CREATE TABLE IF NOT EXISTS nouns (
     id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     word varchar(255) NOT NULL
 );
