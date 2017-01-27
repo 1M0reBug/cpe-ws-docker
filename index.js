@@ -24,7 +24,6 @@ app.get('/', (req, res, next) => {
 app.post('/', (req, res, next) => {
     const verb = req.body.verb;
     dao.push(verb)
-        .then(() => dao.exists(verb))
         .then(() => res.json({ verb: verb, ip: ip.address() }))
         .catch(() => {
             const err = new Error(`${verb} could not be added properly`);
