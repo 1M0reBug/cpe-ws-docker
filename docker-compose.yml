@@ -1,0 +1,37 @@
+version: '2.0'
+
+services:
+    app:
+        build: ./docker/app
+        image: ${CONTAINER_NAME_PREFIX}/${CURRENT_BRANCH}
+        container_name: ${CURRENT_BRANCH}
+        environment:
+            # NODE_ENV: production
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_HOST: ${MYSQL_HOST}
+        ports:
+            - "3000:3000"
+        networks:
+            - app.private
+        depends_on:
+            - db
+    db:
+        build: ./docker/db
+        image: ${CONTAINER_NAME_PREFIX}/${MYSQL_HOST}
+        container_name: ${MYSQL_HOST}
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+        ports:
+            - "3306:3306"
+        networks:
+            - app.private
+        volumes:
+            - ${PWD}/mysql:/var/lib/mysql
+networks:
+    app.private:

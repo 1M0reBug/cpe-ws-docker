@@ -24,7 +24,6 @@ app.get('/', (req, res, next) => {
 app.post('/', (req, res, next) => {
     const noun = req.body.noun;
     dao.push(noun)
-        .then(() => dao.exists(noun))
         .then(() => res.json({ noun: noun, ip: ip.address() }))
         .catch(() => {
             const err = new Error(`${noun} could not be added properly`);
