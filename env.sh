@@ -1,4 +1,4 @@
-#!/bin/bash
+export TEAM_NAME="TEAM_NAME" ## You definitely should change this!
 
 export CURRENT_BRANCH=$(git branch | grep \* | cut -d' ' -f2)
 export TAG=$(echo $RANDOM | sha1sum | cut -d' ' -f1)
@@ -8,11 +8,3 @@ export MYSQL_ROOT_PASSWORD="p4ssw0rD"
 export MYSQL_USER="${CURRENT_BRANCH}_u"
 export MYSQL_PASSWORD="pwd_${CURRENT_BRANCH}_u"
 export MYSQL_DATABASE="$CURRENT_BRANCH"
-
-## TO MODIFY
-WORDS=$(cat<<WORDLIST
-dog
-cat
-Jean-Louis
-WORDLIST
-);

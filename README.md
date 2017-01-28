@@ -24,40 +24,69 @@ sinon vous pouvez les installer à l'avance:
 
 + `sudo docker pull node:7.4.0-alpine`
 + `sudo docker pull mariadb:10.1.21`
++ `sudo docker pull swarm:1.2.6`
 
 ## But
 
-Sur ce commit application utilise 2 containers, un contenant notre application nodejs
-et l'autre la base de données [MariaDB][mariadb-image].
+Sur ce commit on arrive au bout de l'utilisation de l'application. On va juste essayer 
+de créer un swarm dans lequel l'ensemble de notre application va tourner. 
 
-À l'aide de la [documentation de l'image][mariadb-image] et des scripts `docker/common.sh` et
-`docker/db/build.sh`, il va vous falloir rédiger un Dockerfile permettant de créer un container
-autonome qui pourra communiquer avec le container applicatif (ici `adjectives`).
+On a ajouté un dispatcher qui permet d'utiliser un service au hasard dans le réseau privée.
+Ainsi si un service a un alias de réseau `nouns`, on pourra le retrouver en cherchant par DNS le 
+hostname `nouns`. Ce dernier ne sera accessible qu'au containers dans le même réseau.
 
-La requête que l'on veux exécuter au démarrage du container :
+Pour commencer il vous faut définir la variable `TEAM_NAME` dans le fichier `env.sh`. Ceci va
+permettre d'ajouter un préfixe aux noms des services pour éviter les croisements. 
 
-```sql
-CREATE TABLE IF NOT EXISTS nouns (
-    id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    word varchar(255) NOT NULL
-);
+Chacun va builder l'image courante de son application (db et dispatcher inclus), soit 3 containers.
+Une fois les images buildées on va ajouter votre ordinateur à notre cluster.
 
-INSERT INTO adjectives (word) VALUES ('great');
-INSERT INTO adjectives (word) VALUES ('boring');
-INSERT INTO adjectives (word) VALUES ('beautiful');
-INSERT INTO adjectives (word) VALUES ('mesmerizing');
+Pour ce faire, il faut attendre le token et l'adresse IP du manager. Ces éléments vous seront fournis
+pendant l'atelier par slack ou facebook. Avec ces 2 éléments on pourra rejoindre le swarm comme suit
+
+```shell
+$ sudo docker swarm join --token <token> <ip>
+
+This node joined a swarm as a worker
+```
+Pensez à vérifier que vous avez une des trois images `cpe-ws-docker/adjectives`, `cpe-ws-docker/nouns`,
+`cpe-ws-docker/verbs` et `cpe-ws-docker/dispatcher` et `cpe-ws-docker/db` d'installée au moins sur
+l'ensemble des PC.
+
+On va essayer de lancer plusieurs fois les mêmes container sur les machines,il suffira de trouver où
+est hébergé dispatcher pour afficher un mot de votre choix. Cette partie je m'en occuperai car je
+serai le noeud manager
+
+Par exemple si l'on va sur `http://<ip-dispatcher>:8000/verbs`, on devrait avoir une réponse json
+
+```json
+{
+    "verb": "eats",
+    "ip": "10.0.0.5"
+}
 ```
 
-L'idée est que notre application est maintenant capable d'utiliser les variables d'environnement que
-l'on a définit pour communiquer avec la BDD.
-Petite astuce vous noterez l'attribut `--link` lors du run de l'application. 
-Ceci permet aux containers de se retrouver par leur noms. On verra plus tard comment aller encore
-plus loin avec ce mécanisme (link est plus ou moins déprécié).
+si l'on lance plusieurs requêtes sur cette même adresse on devrait voir de nouvelles adresses IP
+s'afficher (et un nouveau verbe), permettant d'utiliser la puissance de l'ensemble des ordinateurs
+de la salle: **de la répartition de charges**, à l'échelle (mais pas optimisé, puisqu'aléatoire).
 
-*INDICE*: Cette partie est plus ou moins une question piège, à vous de trouver pourquoi.
+## Terminer l'atelier
 
-[mariadb-image]: https://hub.docker.com/_/mariadb/ 
+il faut effectuer ces commandes:
 
+```shell
+$ sudo docker swarm leave
+$ sudo docker ps -a 
+$ sudo docker rm <images exited>
+$ sudo docker rmi -f $(sudo docker images -f 'dangling=true')
+$ sudo docker images -a
+$ sudo docker rmi -f <images_a_supprimer>
+```
+
+Ces commandes devraient permettre de supprimer l'ensemble des containers lancés pendant l'atelier,
+mais aussi de nettoyer un peu. Penser à vérifier les containers qui tournent et à éliminer les
+vieilles images qui prennent vite de la place !
+ 
 ## Build automatisé
 
 ### Application
@@ -75,15 +104,6 @@ elle a déjà été téléchargée (voir ci-dessus).
 Le script se contente de créer un nom pour l'image qu'il va builder et de lancer les 2 commandes
 nécessaire pour builder et lancer.
 À but pédagogique je vous invite à aller le visualiser.
-
-Si vous lancer le script plusieurs fois, vous risquez de vous retrouver avec pas mal d'images
-parasites.
-Vous pouver alors arrêter l'application qui tourne (ce qui va supprimer l'image actuellement
-utilisée) à l'aide d'un bon vieux `Ctrl+C`, et lancer 
-
-```shell
-$ sudo ./build.sh clean
-```
 
 ## Application - branche `nouns`
 
@@ -140,3 +160,11 @@ Par défaut on utilise la liste suivant de noms (dans la langue de Shakespeare):
 ## Note
 
 On a supprimé les tests qui prenaient trop de temps à maintenir.
+
+Pour récupérer le binding de port pour le dispatcher :
+
+```shell
+sudo docker inspect \
+  --format='{{range $p, $conf := .NetworkSettings.Ports}} \
+  {{$p}} -> {{(index $conf 0).HostPort}} {{end}}' dispatcher
+```
