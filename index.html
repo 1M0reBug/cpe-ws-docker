@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="node_modules/normalize-css/normalize.css">
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="node_modules/highlightjs/styles/solarized-dark.css">
+
+    <link rel="stylesheet" href="node_modules/reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="node_modules/reveal.js/css/theme/black.css">
+
+    <link rel="stylesheet" href="style.css">
+
+    <title>CPE Workshop - Docker</title>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section id="unleash-the-docker-power">
+                <h1>Unleash the</h1>
+                <img src="assets/docker-logo.png" width="30%" class="docker-logo" alt="docker-logo">
+                <h1>power!</h1>
+            </section>
+            
+            <section>
+                <h2>Rappel: Docker n'est pas une VM!</h2>
+                <img src="assets/troll.png" alt=":troll:" class="fragment troll-face">
+            </section>
+
+            <section>
+                <h2>Pas de théorie aujourd'hui</h2>
+                <p>Uniquement de la pratique!</p>
+            </section>
+
+            <section>
+                <h2>Documentation</h2>
+                <ul>
+                    <li>
+                        <a href="https://docs.docker.com">docs.docker.com</a>
+                    </li>
+                    <li>
+                        <a href="https://hub.docker.com">hub.docker.com</a>
+                    </li>
+                </ul>
+
+            </section>
+
+            <section>
+                <h2>Clonons, Clonons!</h2>
+                <pre><code clas="shell">
+$ git clone https://github.com/1M0reBug/cpe-ws-docker
+$ cd cpe-ws-docker
+$ git checkout init-[nouns,adjectives,verbs]
+                </code></pre>
+            </section>
+
+            <section>
+                <section>
+                    <h2>Dépendances ?</h2>
+                    <ul>
+                        <li>Docker >= 1.12</li>
+                        <li>Docker-compose >= 1.7.0</li>
+                    </ul>
+                </section>
+                <section>
+                    <pre><code class="docker-dependency">
+$ docker version
+
+Client:
+ Version:      1.12.0
+ API version:  1.24
+ Go version:   go1.6.3
+ Git commit:   8eab29e
+ Built:        Thu Jul 28 22:00:36 2016
+ OS/Arch:      linux/amd64
+
+Server:
+ Version:      1.12.0
+ API version:  1.24
+ Go version:   go1.6.3
+ Git commit:   8eab29e
+ Built:        Thu Jul 28 22:00:36 2016
+ OS/Arch:      linux/amd64
+                    </code></pre>
+                </section>
+            </section>
+
+            <section>
+                <h2>Règle n°1: ne pas faire confiance au réseau</h2>
+            </section>
+
+            <section>
+                <h2>Solution n°1 (préférée)</h2>
+                <p>Utiliser le serveur gentiment fourni par Quentin: <code>79.137.110.100</code></p>
+                <p>login: <code>docker</code>, mdp: <code>yjc495tfFj</code></p>
+                <p>6 serveurs</p>
+                <ul>
+                    <li>Port SSH Serveur X: 2200X</li>
+                    <li>Port 80 Serveur X: 808X</li>
+                    <li>Port 8000 Serveur X: 800X</li>
+                    <li>Port 3306 Serveur X: 3306X</li>
+                </ul>
+
+                <pre><code>
+$ ssh -p 22001 docker@79.137.110.100
+                </code></pre>
+            </section>
+
+            <section>
+                <h2>Solution n°2 <i class="fa fa-usb"></i></h2>
+                <pre><code>
+$ cp /media/usb/cpe-ws-docker/images.tar ~
+$ sudo docker load -i ~/images.tar
+$ sudo docker images
+
+REPOSITORY     TAG
+mariadb        10.1.21
+node           7.4.0-alpine
+swarm          latest
+                </code></pre>
+
+                <p>*: pensez à copier aussi le dossier <code>node_modules</code>!</p>
+            </section>
+
+            <section>
+                <h2>Let's start!</h2>
+                <img src="assets/start.gif" alt="start">
+            </section>
+
+            <section>
+                
+                <section data-background="#3d5afe" class="white">
+                    <h1>P1</h1>
+                </section>
+
+                <section>
+                    <pre><code>
+$ git checkout p1-[nous,adjectives,verbs]
+$ git checkout -b dev
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Dockerfile</h2>
+                    <pre><code class="dockerfile">
+FROM [image]
+COPY [src] [dest]
+RUN [cmd]
+EXPOSE [port]
+CMD ["bin", "arg1", "arg2"]
+                </code></pre>
+                </section>
+
+                <section>
+                    <h2>Consignes</h2>
+                    <p>
+                        Rédiger un Dockerfile permettant de lancer le script index.js,
+                        et qu'il soit accessible ici ->
+                        <a href="http://localhost:3000/"><code>0.0.0.0:3000</code></a>
+                    </p>
+                    
+                </section>
+
+                <section>
+                    <h2>Contrainte</h2>
+                    <pre><code>FROM node:7.4.0-alpine</code></pre>
+                    <a href="https://hub.docker.com/_/node">
+                        <img src="assets/docker-node.png" alt="hub page node image">
+                    </a>
+                </section>
+
+                <section>
+                    <h2>Build & Run</h2>
+                    <pre><code>
+$ docker build -t cpe-ws-docker/[nouns,adjectives,verbs]:latest .
+$ docker run -it --rm -p 8000:3000 --name [nouns,adjectives,verbs] cpe-ws-docker/[nouns,adjectives,verbs]
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Correction</h2>
+                    <pre><code>
+$ git commit -m 'p1 implementation'
+$ git rebase docker-[nouns,adjectives,verbs]
+                    </code></pre>
+                </section>
+            </section>
+
+            <section>
+                <section data-background="#3d5afe" class="white">
+                    <h1>P2</h1>
+                </section>
+
+                <section>
+                    <pre><code>
+$ git rebase p2-[nous,adjectives,verbs]
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Consignes</h2>
+                    <ul>
+                        <li>Rédiger un second Dockerfile pour le service de base de données</li>
+                        <li>Base accessible sur le port 3306</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Contrainte</h2>
+                    <pre><code>FROM mariadb:10.1.21</code></pre>
+                    <a href="https://hub.docker.com/_/mariadb">
+                        <img src="assets/docker-mariadb.png" alt="hub page mariadb image">
+                    </a>
+                </section>
+
+                <section>
+                    <h2>Containtes (2/2)</h2>
+                    <p>Ajouter ce fichier dans <code>docker/db</code></p>
+                    <pre><code>
+CREATE TABLE IF NOT EXISTS [nouns,adjectives,verbs] (
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    word varchar(255) NOT NULL
+);
+
+INSERT INTO [nouns,adjectives,verbs] (word) VALUES ('great');
+INSERT INTO [nouns,adjectives,verbs] (word) VALUES ('boring');
+INSERT INTO [nouns,adjectives,verbs] (word) VALUES ('mesmerizing');
+INSERT INTO [nouns,adjectives,verbs] (word) VALUES ('beautiful');
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Build & Run</h2>
+                    <pre><code>
+$ cd docker/db
+$ docker build -t cpe-ws-docker/[nouns,adjectives,verbs]_db:latest .
+$ cd ../app
+$ docker build -t cpe-ws-docker/[nouns,adjectives,verbs]:latest .
+$ docker run -d -p "3306:3306" \
+    -e MYSQL_ROOT_PASSWORD="password" \
+    -e MYSQL_DATABASE="[nouns,adjectives,verbs]" \
+    -e MYSQL_USER="[nouns,adjectives,verbs]_u" \
+    -e MYSQL_PASSWORD="pwd_[nouns,adjectives,verbs]_u" \
+    --name [nouns,adjectives,verbs]_db \
+    cpe-ws-docker/[nouns,adjectives,verbs]_db
+$ docker run -d -p '8000:3000' \
+    -e MYSQL_ROOT_PASSWORD="password" \
+    -e MYSQL_DATABASE="[nouns,adjectives,verbs]" \
+    -e MYSQL_USER="[nouns,adjectives,verbs]_u" \
+    -e MYSQL_PASSWORD="pwd_[nouns,adjectives,verbs]_u" \
+    -e MYSQL_HOST="[nouns,adjectives,verbs]_db"
+    --name [nouns,adjectives,verbs] \
+    cpe-ws-docker/[nouns,adjectives,verbs]
+$ docker ps -a
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Explication</h2>
+                    <p>
+                        Par défaut les containers font partie d'un réseau interne privé, global. Lorsque l'on utilise le
+                        <code>link</code> les containers peuvent utiliser leur nom comme hostname et se retrouver par
+                        un mécanisme interne DNS - voir
+                        <a href="https://docs.docker.com/engine/userguide/networking/default_network/dockerlinks/">ici</a>.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Aller plus loin</h2>
+                    <p>Remplacer le lien par un réseau <code>private</code></p>
+                </section>
+
+                <section>
+                    <h2>Correction</h2>
+                    <pre><code>
+$ docker network create private
+$ docker run -d -p "3306:3306" \
+    --network private \
+    -e MYSQL_ROOT_PASSWORD="password" \
+    -e MYSQL_DATABASE="[nouns,adjectives,verbs]" \
+    -e MYSQL_USER="[nouns,adjectives,verbs]_u" \
+    -e MYSQL_PASSWORD="pwd_[nouns,adjectives,verbs]_u" \
+    --name [nouns,adjectives,verbs]_db \
+    cpe-ws-docker/[nouns,adjectives,verbs]_db
+$ docker run -d -p '8000:3000' \
+    --network private \
+    -e MYSQL_ROOT_PASSWORD="password" \
+    -e MYSQL_DATABASE="[nouns,adjectives,verbs]" \
+    -e MYSQL_USER="[nouns,adjectives,verbs]_u" \
+    -e MYSQL_PASSWORD="pwd_[nouns,adjectives,verbs]_u" \
+    -e MYSQL_HOST="[nouns,adjectives,verbs]_db"
+    --name [nouns,adjectives,verbs] \
+    cpe-ws-docker/[nouns,adjectives,verbs]
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+$ git commit -m 'p2 implementation private network'
+$ git rebase p2-docker-[nouns,adjectives,verbs]
+                    </code></pre>
+                </section>
+            </section>
+
+            <section>
+                <section data-background="#3d5afe" class="white">
+                    <h1>P3</h1>
+                </section>
+
+                <section>
+                    <h2>Consignes</h2>
+                    <p>lancer une ligne de commande énorme chaque fois va etre fastidieux</p>
+                    <p>Ne serait-ce pas merveilleux s'il existait une façon simple de décrire l'ensemble des éléments
+                        pour builder et runner des containers en établissant des liens entre les containers ?</p>
+                </section>
+
+                <section>
+                    <h1>docker-compose</h1>
+                    <a href="docs.docker.com/compose/compose-file">
+                        <img src="assets/docker-compose-doc.png" alt="documentation docker-compose">
+                    </a>
+                </section>
+
+                <section>
+                    <h2>docker-compose.yml</h2>
+                    <pre><code>
+version: "2.0"
+services:
+    [nom]:
+        build: [dossier contenant un Dockerfile]
+        image: [nom de l'image buildée]
+        container_name: [nom du container lancé]
+        networks:
+        - [nom d'un premier réseau interne]
+        - network
+        volumes:
+        - [sur disque]:[dans le container]
+        - ./nginx.conf:/etc/nginx/nginx.conf:ro
+        ports:
+        - [local]:[container]
+        - 8000:3000
+        environment:
+            MY_VAR: value
+            FOO: bar
+        depends_on:
+        - [nom du service dont on dépend]
+    [nom]:
+        image: [image de base sur docker hub]
+networks:
+    [nom du network]:
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Consigne</h2>
+                    <p>Vous devez rédiger un <code>docker-compose.yml</code> qui permette de builder l'image de
+                        l'application et de la BDD, que ces imags lancées aient un nom et qu'elles soient sur un réseau
+                        <code>private</code></p>
+                    <p>L'application devra etre accessible depuis l'extérieur sur le port <code>8000</code> ou correspondant, et la
+                        BDD ne devra pas l'etre depuis l'extérieur</p>
+                </section>
+
+                <section>
+                    <h2>Correction</h2>
+                    <pre><code>
+$ git commit -m 'p3 docker-compose'
+$ git rebase p3-docker-[nouns,adjectives,verbs]
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+version: '2.0'
+services:
+    app:
+        build: ./docker/app
+        image: cpe-ws-docker/adjectives
+        container_name: adjectives
+        environment:
+            NODE_ENV: production
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_USER: adjectives_u
+            MYSQL_PASSWORD: pwd_adjectives_u
+            MYSQL_DATABASE: adjectives
+            MYSQL_HOST: adjectives_db
+        ports:
+            - "8000:3000"
+        networks:
+            - private
+        depends_on:
+            - db
+    db:
+        build: ./docker/db
+        image: cpe-ws-docker/adjectives_db
+        container_name: adjectives_db
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_USER: adjectives_u
+            MYSQL_PASSWORD: pwd_adjectives_u
+            MYSQL_DATABASE: adjectives
+        networks:
+            - private
+networks:
+    private:
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Attention</h2>
+                    <p>La version courante de docker-compose est la version 3, meme si peu utilisée encore</p>
+                </section>
+            </section>
+
+            <section>
+                <section data-background="#3d5afe">
+                    <h1>P4</h1>
+                </section>
+
+                <section>
+                    <h2>Consignes</h2>
+                    <pre><code>
+$ git rebase p4-[nouns,adjectives,verbs]
+                    </code></pre>
+
+                    <p>On va tenter maintenant de faire tourner l'application dans un cluster de PCs</p>
+                </section>
+
+                <section>
+                    <p>Regardez votre slack, je vous ai envoyé une commande magique !</p>
+                    <pre><code>
+$ docker swarm join --token [token] [ip]
+                    </code></pre>
+                    <p>Cette commande permet d'associer votre ordinateur comme un noeud du cluster, qui pourra lancer
+                        des services Docker</p>
+                </section>
+
+                <section>
+                    <h2>launch_services.sh</h2>
+                    <p>Regardez le fichier launch_services.sh, que vous n'allez pas pouvoir utiliser</p>
+                    <p>En utilisant cette commande je vais lancer plusieurs fois les services sur le cluster</p>
+                </section>
+
+                <section>
+                    <pre><code>
+$ docker ps -a
+                    </code></pre>
+                </section>
+            </section>
+
+            <section data-background="#3d5afe">
+                <h1>That's all folks!</h1>
+                <img src="assets/end.gif" alt="applause Putin">
+            </section>
+        </div>
+    </div>
+
+    <script src="node_modules/reveal.js/lib/js/head.min.js"></script>
+    <script src="node_modules/reveal.js/js/reveal.js"></script>
+
+    <script>
+        Reveal.initialize({
+            controls: false,
+            keyboard: true,
+            slideNumber: true,
+            progress: true,
+            center: true,
+            touch: true,
+            loop: true,
+            fragments: true,
+            mouseWheel: true,
+            viewDistance: 3,
+            width: 1024,
+            height: 750,
+            margin: 0.1,
+            minScale: 0.2,
+            maxScale: 1.5,
+            dependencies: [
+                { 
+                    src: 'node_modules/reveal.js/plugin/highlight/highlight.js',
+                    async: true,
+                    callback: function() { hljs.initHighlightingOnLoad(); } 
+                },
+            ],
+        });
+    </script>
+</body>
+</html>

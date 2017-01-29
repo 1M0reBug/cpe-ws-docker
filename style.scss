@@ -1,0 +1,30 @@
+.reveal {    
+    .slide-number {
+        font-size: 40px;
+    }
+
+    .slides {
+        img {
+            background: initial;
+            border: initial;
+            box-shadow: initial;
+        }
+
+        .white {
+            color: #fff;
+        }
+
+        .docker-logo {
+            width: 40%;
+        }
+
+        .troll-face {
+            margin-top: 295px;
+        }
+
+        pre code,
+        .docker-dependency {
+            max-height: 535px;
+        }
+    }
+}

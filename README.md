@@ -1,72 +1,87 @@
-# CPE Workshop: Docker
+# CPE Workshop - Docker
 
-Pour la préparation du workshop il est nécessaire d'avoir installé Docker au préalable.
-Le site [docs.docker.com](https://docs.docker.com), fournit toutes les procédures nécessaires
-quelque soit votre système d'exploitation.
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+    <img alt="Creative Commons License" style="border-width:0" 
+        src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" />
+</a>
 
-Les éléments requis sont:
-* [docker engine :arrow_upper_right:](https://docs.docker.com/engine/installation/) 
-* [docker compose :arrow_upper_right:](https://docs.docker.com/compose/install/)
+Le but de ce workshop est de présenter d'un manière pratique
+l'utilisation des conteneurs dans un contexte de micro-services.
+ 
+Sur ce dépôt, trois branches sont disponibles correspondant à 3
+services différents. 
+Chacun des service propose un mot qu'il soit adjectif, nom ou verbe.
 
-Si à l'issue de l'installation vous êtes capables de lancer le hello world, c'est l'essentiel, ce 
-n'est pas la peine de chercher plus loin.
+Le but d'un tel service serait de fournir une API REST, pour récupérer
+ces mots et rédiger un [cadavre exquis][cadavre-exquis-wiki].
+Ainsi en utilisant une URL telle que `/verbs` on ferait appel au service
+verbs, etc. Le cas présenté est évidemment là à but pédagogique.
 
-Une clef USB sera passée pour installer les images nécessaires et éviter de compter sur le réseau.
-pour ce faire récupérez le dossier cpe-ws-docker sur votre ordinateur et lancer un terminal dans
-le dossier (**sur votre ordinateur !**). Une fois que c'est fait vous pouvez lancer un
+[cadavre-exquis-wiki]: https://www.wikiwand.com/fr/Cadavre_exquis_(jeu)
 
-```shell
-$ cd ~/Documents/src/cpe-ws-docker/
-$ sudo docker load -i images.tar
-``` 
+## Pour éviter les problèmes de réseaux
 
-sinon vous pouvez les installer à l'avance:
+### Serveur externe 
 
-+ `sudo docker pull node:7.4.0-alpine`
-+ `sudo docker pull mariadb:10.1.21`
-+ `sudo docker pull swarm:1.2.6`
+Quentin, nous propose gentiment d'utiliser un de ses serveurs
+pour l'atelier. Cette solution semble tout à fait judicieuse.
+Pour se connecter il faut choisir un des 6 serveurs (on le fera
+lors de l'atelier). L'adresse IP: `79.137.110.100`.
+login: `docker`, mdp: `yjc495tfFj`.
+Voilà la redirection des ports des serveurs vers l'extérieur:
 
-## But
++ Port SSH Serveur X: `2200X`
++ Port 80 Serveur X: `808X`
++ Port 8000 Serveur X: `800X`
++ Port 3306 Serveur X: `3306X`
 
-Sur ce commit on arrive au bout de l'utilisation de l'application. On va juste essayer 
-de créer un swarm dans lequel l'ensemble de notre application va tourner. 
+Ainsi lorsque je mentionerais le port `8000`, il vous faudra utiliser
+le port correspondant à votre serveur spécifique.
 
-On a ajouté un dispatcher qui permet d'utiliser un service au hasard dans le réseau privée.
-Ainsi si un service a un alias de réseau `nouns`, on pourra le retrouver en cherchant par DNS le 
-hostname `nouns`. Ce dernier ne sera accessible qu'au containers dans le même réseau.
+### Clé USB
 
-Pour commencer il vous faut définir la variable `TEAM_NAME` dans le fichier `env.sh`. Ceci va
-permettre d'ajouter un préfixe aux noms des services pour éviter les croisements. 
+Je vous propose une clé USB qui contient les images à télécharger, 
+il vous suffit de faire un:
 
-Chacun va builder l'image courante de son application (db et dispatcher inclus), soit 3 containers.
-Une fois les images buildées on va ajouter votre ordinateur à notre cluster.
-
-Pour ce faire, il faut attendre le token et l'adresse IP du manager. Ces éléments vous seront fournis
-pendant l'atelier par slack ou facebook. Avec ces 2 éléments on pourra rejoindre le swarm comme suit
-
-```shell
-$ sudo docker swarm join --token <token> <ip>
-
-This node joined a swarm as a worker
 ```
-Pensez à vérifier que vous avez une des trois images `cpe-ws-docker/adjectives`, `cpe-ws-docker/nouns`,
-`cpe-ws-docker/verbs` et `cpe-ws-docker/dispatcher` et `cpe-ws-docker/db` d'installée au moins sur
-l'ensemble des PC.
+$ docker load -i images.tar
+```
+ copiez aussi le dossier `node_modules`.
 
-À partir de là, tout peux arriver. [Un bug sur la version 1.12 de docker empêche la bonne découverte
-des services sur le swarm](https://github.com/docker/docker/issues/24789).
-Autrement dit il est possible que cela ne marche pas lors de l'atelier. 
 
-Dans l'absolu, le service `dispatcher` utilise le nom du service auquel on veut accéder pour faire de
-l'équilibrage de charge aléatoire entre les différents services répliqués sur l'ensemble des noeuds.
-Ceux-ci peuvent toutefois être lancés sur la même machine en physique, mais ils doivent avoir une
-adresse IP différente, qui doit s'afficher dans la réponse.
+## Organisation du workshop
 
-Si l'on se connecte à n'importe quel noeud en `http://localhost:8000/nouns`, on doit obtenir un nom
-aléatoire et une adresse aléatoire des services nouns. L'adresse renvoyé provient directement du
-service, autrement dit du container -> POC. 
+Chacune des étapes de l'atelier sont représentées par des tag git. 
 
-On doit obtenir ce genre de réponse.
+```
++ init-nouns,p1-nouns
+|
++ p2-nouns
+|
++ p3-nouns
+|
++ p4-nouns
+```
+Remplacer `nouns` par la branche de votre choix
+
+Ceci permettra à ceux qui se seraient perdu en cours de récupérer les 
+éléments précédents.
+
+Pour faciliter le travail, je vous propose de vous placer sur le premier tag
+et de créer une branche pour l'atelier:
+
+```
+$ git checkout init-nouns
+$ git checkout -b dev
+```
+
+## 1/ Partie 1
+tag: `init-[nouns,adjectives,verbs]`
+
+Pour cette première partie il va vous falloir monter un conteneur de l'application
+constituée par `index.js`. Ce serveur se lance sur le port 3000 et affiche un mot
+aléatoire sur sa racine. Ainsi lorsque l'on se rend sur [http://localhost:3000/](http://localhost:3000/),
+on doit obtenir un résultat similaire au suivant (en fonction de la branche courante).
 
 ```json
 {
@@ -74,102 +89,242 @@ On doit obtenir ce genre de réponse.
     "ip": "10.0.0.5"
 }
 ```
+Docker prévoit un format de fichier particulier qui va décrire quels sont les éléments que notre
+conteneur doit utiliser: le [Dockerfile][dockerfile-reference].
+Voici le genre d'information que l'on retrouve dans un fichier Dockerfile
 
-## Terminer l'atelier
+```dockerfile
+FROM [image]
+COPY [src] [dest]
+RUN [cmd]
+EXPOSE [port]
+CMD ["bin", "arg1", "arg2"]
+```
 
-il faut effectuer ces commandes:
+Ce fichier est un moyen de décrire l'utilisation des images hébergées par défaut
+sur le [hub docker][docker-hub]. Elles sont en général bien documentée et
+permettent de prendre rapidement en main l'outil. 
+Pour cette première phase je vous demande de rédiger un Dockerfile complet, en
+ayant pour seul base cette ligne
+
+```dockerfile
+FROM node:7.4.0-alpine
+```
+Le conteneur devra afficher son résultat sur le port 8000
+
+En utilisant sa documentation, il devrait vous être possible de builder et lancer
+le conteneur avec la commande suivante:
 
 ```shell
-$ sudo docker swarm leave
-$ sudo docker ps -a 
-$ sudo docker rm <images exited>
-$ sudo docker rmi -f $(sudo docker images -f 'dangling=true')
-$ sudo docker images -a
-$ sudo docker rmi -f <images_a_supprimer>
+$ docker build -t cpe-ws-docker/[nouns,adjectives,verbs]:latest .
+$ docker run -it --rm -p 8000:3000 --name [nouns,adjectives,verbs] cpe-ws-docker/[nouns,adjectives,verbs]
 ```
 
-Elles devraient permettre de supprimer l'ensemble des containers lancés pendant l'atelier,
-mais aussi de nettoyer un peu. Penser à vérifier les containers qui tournent et à éliminer les
-vieilles images qui prennent vite de la place !
- 
-## Build automatisé
+Si votre conteneur fonctionne vous devriez voir un résultat similaire à ci-dessus
+dans votre navigateur à l'adresse [http://localhost:8000](http://localhost:8000), ou
+autre si vous utilisez le serveur
+(par exemple [http://79.137.110.100:80001/](http://79.137.110.100:80001/)).
 
-### Application
+Lorsque c'est chose faite vous pouvez aider les autres et sinon
 
-Pour builder l'API REST dans un container il suffit de lancer:
+```
+$ git commit -m 'p1 dockerfile'
+$ git rebase p2-[nouns,adjectives,verbs]
+```
+
+[dockerfile-reference]: https://docs.docker.com/engine/reference/builder/
+[docker-hub]: https://hub.docker.com
+
+## 2/ Partie 2
+tag: `p2-[nous,adjectives,verbs]`
+
+Dans cette partie on va utiliser une base de données MariaDB pour pouvoir stocker les
+mots du service. Il va nous falloir utiliser un script précis que voilà pour initialiser
+les données
+
+```sql
+CREATE TABLE IF NOT EXISTS adjectives (
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    word varchar(255) NOT NULL
+);
+
+INSERT INTO adjectives (word) VALUES ('great');
+INSERT INTO adjectives (word) VALUES ('boring');
+INSERT INTO adjectives (word) VALUES ('mesmerizing');
+INSERT INTO adjectives (word) VALUES ('beautiful')
+```
+
+Dans le cas ci-dessus on a représenté les adjectifs, à vous d'adapter le contenu 
+en fonction de la branche que vous avez choisi à la base. 
+
+De la même manière que précédemment, nous allons utiliser une version particulière
+de [MariaDB][hub-maria]. Je vous invite à aller consulter la documentation, pour
+comprendre les différents mécanismes mis en jeux pour cette image.
+
+Lorsque vous aurez compris l'utilisation, vous pourrez rédiger un Dockerfile
+qui devra créer un mot de passe Root, une base de données par défaut, ainsi qu'un
+utilisateur et son mot de passe, tout en injectant le script sql ci-dessus. 
+
+**Attention** Cette partie est piège, lisez attentivement la documentation
+
+Vous utiliserez les mêmes commandes (build et run) que précédemment en ajoutant
+les éléments nécessaires, sachant que l'application attend désormais 4 variables
+d'environnement:
+
++ `MYSQL_HOST`
++ `MYSQL_DATABASE`
++ `MYSQL_USER`
++ `MYSQL_PASSWORD`
+
+Enfin, pour permettre aux 2 containers de communiquer entre eux, il va être nécessaire
+de rajouter un flag lors de l'éxécution du container application: `--link [container_name]`
+
+[hub-maria]: https://hub.docker/_/MariaDB
+### Aller plus loin
+
+Le système de linking repose sur un réseau privé qui existe entre tous les containers,
+cette méthode est dépréciée par la documentation Docker (voir [ici][doc-links]).
+On souhaite utiliser des réseaux privés virtuels spécifiques.
+
+Pour ce faire on peut utiliser la commande `docker network create`, vous pouvez consulter l'aide
+en faisant `docker network create --help`.
+Une fois le réseau crée il faudra utiliser `--network [nom]` pour les deux lancements.
+
+à la fin 
+
+```
+$ git commit -m 'p2 dockerfile BDD + networks and env'
+$ git rebase p3-[nouns,adjectives,verbs]
+```
+
+[doc-links]: https://docs.docker.com/engine/userguide/networking/default_network/dockerlinks/
+## 3/ Partie 3
+tag: `p3-[nouns,adjectives,verbs]`
+
+On remarque que l'utilisation de la simple ligne de commande commence à devenir fastidieux.
+Docker propose un service qui permet d'organiser les build et run de plusieurs conteneurs,
+ainsi que les interactions entre eux: [docker-compose][dc-doc].
+
+Pour fonctionner docker-compose nécessite un fichier de configuration .yml, la plupart
+du temps appelé `docker-compose.yml`. La syntaxe est la suivante:
+
+```
+version: "2.0"
+services:
+    [nom]:
+        build: [dossier contenant un Dockerfile]
+        image: [nom de l'image buildée]
+        container_name: [nom du container lancé]
+        networks:
+        - [nom d'un premier réseau interne]
+        - network
+        volumes:
+        - [sur disque]:[dans le container]
+        - ./nginx.conf:/etc/nginx/nginx.conf:ro
+        ports:
+        - [local]:[container]
+        - 8000:3000
+        environment:
+            MY_VAR: value
+            FOO: bar
+        depends_on:
+        - [nom du service dont on dépend]
+    [nom]:
+        image: [image de base sur docker hub]
+networks:
+    [nom du network]:
+```
+
+je ne pourrais pas décrire l'ensemble des options disponibles elles sont trop nombreuses,
+mais la documentation les décrit toutes. 
+
+Je vous demande de traduire les commandes que vous avez réalisé jusque là en fichier docker-compose.
+Le but est donc d'avoir 2 services qui tourneront : l'application et la BDD.
+
+Pour corser un peu je vous demande de toujours rendre accessible l'application sur le port 8000,
+mais d'empêcher l'accès depuis l'extérieur à la base de données.
+
+Lorsque vous aurez rédigé le fichier vous pouvez utiliser les 2 commandes suivante
 
 ```shell
-$ sudo ./build.sh
+# dans le dossier où se situe docker-compose.yml, sinon ajouter l'option -f
+$ docker-compose config
+# build les images et les lance en tâche de fond avec la configuration rédigée
+$ docker-compose up -d 
 ```
 
-Lors du premier lancement docker va se charger d'aller récupérer les images indiquées dans le
-`Dockerfile` sur [hub.docker.com](https://hub.docker.com/), ou les récupérer sur votre ordinateur si
-elle a déjà été téléchargée (voir ci-dessus).
+Si le service est accessible et fonctionnel à [http://localhost:8000](http://localhost:8000),
+vous pouvez
 
-Le script se contente de créer un nom pour l'image qu'il va builder et de lancer les 2 commandes
-nécessaire pour builder et lancer.
-À but pédagogique je vous invite à aller le visualiser.
-
-## Application - branche `nouns`
-
-L'application que l'on va utiliser est un petit serveur nodejs. Si vous ne connaissez pas
-(ou n'aimez pas/détestez) Javascript, ne vous inquiétez pas, on aurait très bien pu faire ça dans
-n'importe quel autre langage.
-L'application suivra le concept du [cadavre exquis][cadavre-exquis-wiki]: (*Nom*, Adjectif, Verbe,
-Complément),chacun contenu dans un service différent.
-Ce serveur web est une API REST avec quelques endpoints permettant de modifier une partie du jeu.
-
-
-[cadavre-exquis-wiki]: https://www.wikiwand.com/fr/Cadavre_exquis_(jeu)
-
-### GET /
-
-+ Response 200 (`application/json`)
-Retourne un nom au hasard
-
-```json
-{
-   "noun": "dog",
-    "ip": "192.168.0.33"
-}
+```
+$ git commit -m 'p3 docker-compose'
+$ git rebase p4-[nouns,adjectives,verbs]
 ```
 
-### POST /
+**Attention**: docker-compose est passé en version 3 récemment, mais nous utiliserons la 2 pour
+les besoins du workshop.
 
-Lorsqu'on ajoute un nouveau nom, la réponse consiste à le renvoyer, avec l'adresse
-ip du serveur repondant.
+[dc-doc]: https://docs.docker.com/compose/compose-file
+## 4/ Partie 4
+tag: `p4-[nouns,adjectives,verbs]`
 
-+ Body
-```json
-{
-    "noun": "fish"
-}
+*INFO* Dans cette partie, vous n'allez pas faire grand chose. De de plus il y a de fortes chances
+que la fonctionnalité ne marche pas. 
+
+Il vous est nécessaire d'installer l'image swarm:
+
+```
+$ docker pull swarm:latest
 ```
 
-+ Reponse 200 (`application/json`)
-```json
-{
-    "noun": "fish",
-    "ip": "192.168.0.33"
-}
+Dans cette partie on va essayer de créer un cluster avec l'ensemble des serveurs.
+Pour ce faire je vais créer un manager principal, auprès duquel vous allez vous enregistrer
+comme noeud de travail.
+
+Vous allez recevoir par slack/facebook, une commande qui vous permettra de vous enregistrer
+auprès du manager. 
+Elle se présente comme suit:
+
+```
+$ docker swarm join --token [token] [ip]
 ```
 
-## Noms par défaut
+Une fois cette commande saisie docker vous indique si vous faite partie du swarm ou non.
 
-Par défaut on utilise la liste suivant de noms (dans la langue de Shakespeare):
+Par la suite, je vais lancer des services (nouns, adjectives et verbs en même temps).
+Ces services devraient se répartir en fonction de la charge sur l'ensemble des serveurs.
+Chacun des services sera dupliqué 4 fois.
 
-+ dog
-+ cat
-+ Jean-Louis
+Lorsque je vous l'indiquerais vous pourrez observer de nouveaux containers (que vous n'avez pas
+lancé en `docker ps -a`).
 
-## Note
+Si swarm décide de fonctionner (bug fixé dans la v1.13), on devrait pouvoir utiliser
+le dispatcher qui permet de taper sur un service répliqué au hasard en allant sur 
+[http://localhost:8000/{nouns,adjectives,verbs}](http://localhost:8000/nouns).
+L'adresse IP du container qui a pris en charge la requête devrait s'afficher
+dans la réponse en JSON.
 
-On a supprimé les tests qui prenaient trop de temps à maintenir.
+## Conclusion
 
-Pour récupérer le binding de port pour le dispatcher :
+Nous sommes à la fin de l'aventure. Si vous êtes arrivés jusqu'ici, il ne vous reste plus
+grand chose pour être courant en docker, si ce n'est de pratiquer!
 
-```shell
-sudo docker inspect \
-  --format='{{range $p, $conf := .NetworkSettings.Ports}} \
-  {{$p}} -> {{(index $conf 0).HostPort}} {{end}}' dispatcher
-```
+> That's all Folks!
+
+## Rermerciements
+
+Ce workshop est largement inspiré de
+[lab-docker][lab-docker-url] qui est
+une ressource actualisée de l'utilisation avancée de Docker.
+
+[lab-docker-url]: https://github.com/CodeStory/lab-docker
+
+## Licence
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+    <img alt="Creative Commons License" 
+        style="border-width:0" 
+        src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
+</a>
+<br />
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
