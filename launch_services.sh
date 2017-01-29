@@ -16,6 +16,10 @@ docker service create --name "db" --replicas 1 \
 
 for service in adjectives verbs nouns; do
     docker service create --name "${service}" --replicas 2 \
+        -e MYSQL_USER=${MYSQL_USER} \
+        -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
+        -e MYSQL_DATABASE=${MYSQL_DATABASE} \
+        -e MYSQL_HOST=${MYSQL_HOST} \
         --network "$NETWORK" \
         "${CONTAINER_NAME_PREFIX}/${service}"
 done

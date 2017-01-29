@@ -25,3 +25,12 @@ CREATE TABLE IF NOT EXISTS verbs (
 INSERT INTO verbs (word) VALUES ('eats');
 INSERT INTO verbs (word) VALUES ('walks');
 INSERT INTO verbs (word) VALUES ('sleeps');
+
+CREATE OR REPLACE USER adjectives_u@'%' IDENTIFIED BY 'pwd_adjectives_u';
+GRANT ALL ON `adjectives`.* TO 'adjectives_u'@'%';
+
+CREATE OR REPLACE USER nouns_u@'%' IDENTIFIED BY 'pwd_nouns_u';
+GRANT ALL ON `nouns`.* TO 'nouns_u'@'%';
+
+CREATE OR REPLACE USER verbs_u@'%' IDENTIFIED BY 'pwd_verbs_u';
+GRANT ALL ON `verbs`.* TO 'verbs_u'@'%';

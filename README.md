@@ -53,22 +53,27 @@ Pensez à vérifier que vous avez une des trois images `cpe-ws-docker/adjectives
 `cpe-ws-docker/verbs` et `cpe-ws-docker/dispatcher` et `cpe-ws-docker/db` d'installée au moins sur
 l'ensemble des PC.
 
-On va essayer de lancer plusieurs fois les mêmes container sur les machines,il suffira de trouver où
-est hébergé dispatcher pour afficher un mot de votre choix. Cette partie je m'en occuperai car je
-serai le noeud manager
+À partir de là, tout peux arriver. [Un bug sur la version 1.12 de docker empêche la bonne découverte
+des services sur le swarm](https://github.com/docker/docker/issues/24789).
+Autrement dit il est possible que cela ne marche pas lors de l'atelier. 
 
-Par exemple si l'on va sur `http://<ip-dispatcher>:8000/verbs`, on devrait avoir une réponse json
+Dans l'absolu, le service `dispatcher` utilise le nom du service auquel on veut accéder pour faire de
+l'équilibrage de charge aléatoire entre les différents services répliqués sur l'ensemble des noeuds.
+Ceux-ci peuvent toutefois être lancés sur la même machine en physique, mais ils doivent avoir une
+adresse IP différente, qui doit s'afficher dans la réponse.
+
+Si l'on se connecte à n'importe quel noeud en `http://localhost:8000/nouns`, on doit obtenir un nom
+aléatoire et une adresse aléatoire des services nouns. L'adresse renvoyé provient directement du
+service, autrement dit du container -> POC. 
+
+On doit obtenir ce genre de réponse.
 
 ```json
 {
-    "verb": "eats",
+    "noun": "dog",
     "ip": "10.0.0.5"
 }
 ```
-
-si l'on lance plusieurs requêtes sur cette même adresse on devrait voir de nouvelles adresses IP
-s'afficher (et un nouveau verbe), permettant d'utiliser la puissance de l'ensemble des ordinateurs
-de la salle: **de la répartition de charges**, à l'échelle (mais pas optimisé, puisqu'aléatoire).
 
 ## Terminer l'atelier
 
@@ -83,7 +88,7 @@ $ sudo docker images -a
 $ sudo docker rmi -f <images_a_supprimer>
 ```
 
-Ces commandes devraient permettre de supprimer l'ensemble des containers lancés pendant l'atelier,
+Elles devraient permettre de supprimer l'ensemble des containers lancés pendant l'atelier,
 mais aussi de nettoyer un peu. Penser à vérifier les containers qui tournent et à éliminer les
 vieilles images qui prennent vite de la place !
  

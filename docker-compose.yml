@@ -4,7 +4,7 @@ services:
     dispatcher:
         build: ./docker/dispatcher
         image: ${CONTAINER_NAME_PREFIX}/dispatcher
-        container_name: ${TEAM_NAME}_dispatcher
+        container_name: dispatcher
         ports:
             - 8000
         networks:
@@ -16,13 +16,7 @@ services:
     app:
         build: ./docker/app
         image: ${CONTAINER_NAME_PREFIX}/${CURRENT_BRANCH}
-        container_name: ${TEAM_NAME}_${CURRENT_BRANCH}
-        environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-            MYSQL_DATABASE: ${MYSQL_DATABASE}
-            MYSQL_HOST: ${MYSQL_HOST}
+        container_name: ${CURRENT_BRANCH}
         networks:
             private:
                 aliases:
@@ -34,12 +28,7 @@ services:
     db:
         build: ./docker/db
         image: ${CONTAINER_NAME_PREFIX}/db
-        container_name: ${TEAM_NAME}_${MYSQL_HOST}
-        environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-            MYSQL_DATABASE: ${MYSQL_DATABASE}
+        container_name: db
         volumes:
             - ${PWD}/mysql:/var/lib/mysql
         networks:
