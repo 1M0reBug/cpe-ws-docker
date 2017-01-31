@@ -1,37 +1,43 @@
 version: '2.0'
 
 services:
+    dispatcher:
+        build: ./docker/dispatcher
+        image: ${CONTAINER_NAME_PREFIX}/dispatcher
+        container_name: dispatcher
+        ports:
+            - 8000
+        networks:
+            private:
+                aliases:
+                    - dispatcher
+        depends_on:
+            - app
     app:
         build: ./docker/app
         image: ${CONTAINER_NAME_PREFIX}/${CURRENT_BRANCH}
         container_name: ${CURRENT_BRANCH}
-        environment:
-            # NODE_ENV: production
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-            MYSQL_DATABASE: ${MYSQL_DATABASE}
-            MYSQL_HOST: ${MYSQL_HOST}
-        ports:
-            - "3000:3000"
         networks:
-            - app.private
+            private:
+                aliases:
+                    - ${CURRENT_BRANCH}
         depends_on:
             - db
+        volumes:
+            - "${PWD}/node_modules:/usr/src/${CURRENT_BRANCH}/node_modules"
     db:
         build: ./docker/db
-        image: ${CONTAINER_NAME_PREFIX}/${MYSQL_HOST}
-        container_name: ${MYSQL_HOST}
-        environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-            MYSQL_DATABASE: ${MYSQL_DATABASE}
-        ports:
-            - "3306:3306"
-        networks:
-            - app.private
+        image: ${CONTAINER_NAME_PREFIX}/db
+        container_name: db
         volumes:
             - ${PWD}/mysql:/var/lib/mysql
+        networks:
+            private:
+                aliases:
+                    - nouns_db
+                    - verbs_db
+                    - adjectives_db
+                    - db
 networks:
-    app.private:
+    private:
+        external: true

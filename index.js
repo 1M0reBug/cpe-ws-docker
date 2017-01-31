@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.get('/', (req, res, next) => {
     dao.getRandWord()
         .then(word => 
-            res.json({ adjective: word, ip: ip.address() })
+            res.json({ noun: word, ip: ip.address() })
         )
         .catch(err => {
             err.status = 500;
@@ -22,11 +22,11 @@ app.get('/', (req, res, next) => {
 });
 
 app.post('/', (req, res, next) => {
-    const adjective = req.body.adjective;
-    dao.push(adjective)
-        .then(() => res.json({ adjective: adjective, ip: ip.address() }))
+    const noun = req.body.noun;
+    dao.push(noun)
+        .then(() => res.json({ noun: noun, ip: ip.address() }))
         .catch(() => {
-            const err = new Error(`${adjective} could not be added properly`);
+            const err = new Error(`${noun} could not be added properly`);
             err.status = 500;
             next(err);
         });
@@ -60,7 +60,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
     if (process.env.NODE_ENV !== 'test') console.log('Listening on 0.0.0.0:3000');
 });
 

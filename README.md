@@ -24,40 +24,74 @@ sinon vous pouvez les installer à l'avance:
 
 + `sudo docker pull node:7.4.0-alpine`
 + `sudo docker pull mariadb:10.1.21`
++ `sudo docker pull swarm:1.2.6`
 
 ## But
 
-Sur ce commit application utilise 2 containers, un contenant notre application nodejs
-et l'autre la base de données [MariaDB][mariadb-image].
+Sur ce commit on arrive au bout de l'utilisation de l'application. On va juste essayer 
+de créer un swarm dans lequel l'ensemble de notre application va tourner. 
 
-À l'aide de la [documentation de l'image][mariadb-image] et des scripts `docker/common.sh` et
-`docker/db/build.sh`, il va vous falloir rédiger un Dockerfile permettant de créer un container
-autonome qui pourra communiquer avec le container applicatif (ici `adjectives`).
+On a ajouté un dispatcher qui permet d'utiliser un service au hasard dans le réseau privée.
+Ainsi si un service a un alias de réseau `nouns`, on pourra le retrouver en cherchant par DNS le 
+hostname `nouns`. Ce dernier ne sera accessible qu'au containers dans le même réseau.
 
-La requête que l'on veux exécuter au démarrage du container :
+Pour commencer il vous faut définir la variable `TEAM_NAME` dans le fichier `env.sh`. Ceci va
+permettre d'ajouter un préfixe aux noms des services pour éviter les croisements. 
 
-```sql
-CREATE TABLE IF NOT EXISTS adjectives (
-    id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    word varchar(255) NOT NULL
-);
+Chacun va builder l'image courante de son application (db et dispatcher inclus), soit 3 containers.
+Une fois les images buildées on va ajouter votre ordinateur à notre cluster.
 
-INSERT INTO adjectives (word) VALUES ('great');
-INSERT INTO adjectives (word) VALUES ('boring');
-INSERT INTO adjectives (word) VALUES ('beautiful');
-INSERT INTO adjectives (word) VALUES ('mesmerizing');
+Pour ce faire, il faut attendre le token et l'adresse IP du manager. Ces éléments vous seront fournis
+pendant l'atelier par slack ou facebook. Avec ces 2 éléments on pourra rejoindre le swarm comme suit
+
+```shell
+$ sudo docker swarm join --token <token> <ip>
+
+This node joined a swarm as a worker
+```
+Pensez à vérifier que vous avez une des trois images `cpe-ws-docker/adjectives`, `cpe-ws-docker/nouns`,
+`cpe-ws-docker/verbs` et `cpe-ws-docker/dispatcher` et `cpe-ws-docker/db` d'installée au moins sur
+l'ensemble des PC.
+
+À partir de là, tout peux arriver. [Un bug sur la version 1.12 de docker empêche la bonne découverte
+des services sur le swarm](https://github.com/docker/docker/issues/24789).
+Autrement dit il est possible que cela ne marche pas lors de l'atelier. 
+
+Dans l'absolu, le service `dispatcher` utilise le nom du service auquel on veut accéder pour faire de
+l'équilibrage de charge aléatoire entre les différents services répliqués sur l'ensemble des noeuds.
+Ceux-ci peuvent toutefois être lancés sur la même machine en physique, mais ils doivent avoir une
+adresse IP différente, qui doit s'afficher dans la réponse.
+
+Si l'on se connecte à n'importe quel noeud en `http://localhost:8000/nouns`, on doit obtenir un nom
+aléatoire et une adresse aléatoire des services nouns. L'adresse renvoyé provient directement du
+service, autrement dit du container -> POC. 
+
+On doit obtenir ce genre de réponse.
+
+```json
+{
+    "noun": "dog",
+    "ip": "10.0.0.5"
+}
 ```
 
-L'idée est que notre application est maintenant capable d'utiliser les variables d'environnement que
-l'on a définit pour communiquer avec la BDD.
-Petite astuce vous noterez l'attribut `--link` lors du run de l'application. 
-Ceci permet aux containers de se retrouver par leur noms. On verra plus tard comment aller encore
-plus loin avec ce mécanisme (link est plus ou moins déprécié).
+## Terminer l'atelier
 
-*INDICE*: Cette partie est plus ou moins une question piège, à vous de trouver pourquoi.
+il faut effectuer ces commandes:
 
-[mariadb-image]: https://hub.docker.com/_/mariadb/ 
+```shell
+$ sudo docker swarm leave
+$ sudo docker ps -a 
+$ sudo docker rm <images exited>
+$ sudo docker rmi -f $(sudo docker images -f 'dangling=true')
+$ sudo docker images -a
+$ sudo docker rmi -f <images_a_supprimer>
+```
 
+Elles devraient permettre de supprimer l'ensemble des containers lancés pendant l'atelier,
+mais aussi de nettoyer un peu. Penser à vérifier les containers qui tournent et à éliminer les
+vieilles images qui prennent vite de la place !
+ 
 ## Build automatisé
 
 ### Application
@@ -76,21 +110,12 @@ Le script se contente de créer un nom pour l'image qu'il va builder et de lance
 nécessaire pour builder et lancer.
 À but pédagogique je vous invite à aller le visualiser.
 
-Si vous lancer le script plusieurs fois, vous risquez de vous retrouver avec pas mal d'images
-parasites.
-Vous pouver alors arrêter l'application qui tourne (ce qui va supprimer l'image actuellement
-utilisée) à l'aide d'un bon vieux `Ctrl+C`, et lancer 
-
-```shell
-$ sudo ./build.sh clean
-```
-
-## Application - branche `adjectives`
+## Application - branche `nouns`
 
 L'application que l'on va utiliser est un petit serveur nodejs. Si vous ne connaissez pas
 (ou n'aimez pas/détestez) Javascript, ne vous inquiétez pas, on aurait très bien pu faire ça dans
 n'importe quel autre langage.
-L'application suivra le concept du [cadavre exquis][cadavre-exquis-wiki]: (Nom, Adjectif, Verbe,
+L'application suivra le concept du [cadavre exquis][cadavre-exquis-wiki]: (*Nom*, Adjectif, Verbe,
 Complément),chacun contenu dans un service différent.
 Ce serveur web est une API REST avec quelques endpoints permettant de modifier une partie du jeu.
 
@@ -100,44 +125,51 @@ Ce serveur web est une API REST avec quelques endpoints permettant de modifier u
 ### GET /
 
 + Response 200 (`application/json`)
-Retourne un adjectif au hasard
+Retourne un nom au hasard
 
 ```json
 {
-   "adjective": "beautiful",
+   "noun": "dog",
     "ip": "192.168.0.33"
 }
 ```
 
 ### POST /
 
-Lorsqu'on ajoute un nouvel adjectif, la réponse consiste à le renvoyer, avec l'adresse
+Lorsqu'on ajoute un nouveau nom, la réponse consiste à le renvoyer, avec l'adresse
 ip du serveur repondant.
 
 + Body
 ```json
 {
-    "adjective": "marvelous"
+    "noun": "fish"
 }
 ```
 
 + Reponse 200 (`application/json`)
 ```json
 {
-    "adjective": "marvelous",
+    "noun": "fish",
     "ip": "192.168.0.33"
 }
 ```
 
-## Adjectifs par défaut
+## Noms par défaut
 
-Par défaut on utilise la liste suivant d'adjectifs (dans la langue de Shakespeare):
+Par défaut on utilise la liste suivant de noms (dans la langue de Shakespeare):
 
-+ great
-+ boring
-+ beautiful
-+ mesmerizing
++ dog
++ cat
++ Jean-Louis
 
 ## Note
 
 On a supprimé les tests qui prenaient trop de temps à maintenir.
+
+Pour récupérer le binding de port pour le dispatcher :
+
+```shell
+sudo docker inspect \
+  --format='{{range $p, $conf := .NetworkSettings.Ports}} \
+  {{$p}} -> {{(index $conf 0).HostPort}} {{end}}' dispatcher
+```
