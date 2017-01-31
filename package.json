@@ -5,20 +5,19 @@
   "main": "index.js",
   "scripts": {
     "serve": "python -m SimpleHTTPServer",
-    "sass": "node-sass -w style.scss > style.css"
+    "sass": "node-sass -w style.scss > public/css/style.css"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/1M0reBug/cpe-ws-docker.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "CC-BY-NC-SA-4.0",
   "bugs": {
     "url": "https://github.com/1M0reBug/cpe-ws-docker/issues"
   },
   "homepage": "https://github.com/1M0reBug/cpe-ws-docker#readme",
   "dependencies": {
-    "font-awesome": "^4.7.0",
     "hammerjs": "^2.0.8",
     "highlightjs": "^9.8.0",
     "jquery": "^3.1.1",

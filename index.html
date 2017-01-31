@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
 
-    <link rel="stylesheet" href="node_modules/normalize-css/normalize.css">
-    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="node_modules/highlightjs/styles/solarized-dark.css">
+    <link rel="stylesheet" href="public/css/normalize.css">
+    <link rel="stylesheet" href="public/css/solarized-dark.css">
 
-    <link rel="stylesheet" href="node_modules/reveal.js/css/reveal.css">
-    <link rel="stylesheet" href="node_modules/reveal.js/css/theme/black.css">
+    <link rel="stylesheet" href="public/css/reveal.css">
+    <link rel="stylesheet" href="public/css/black.css">
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="public/css/style.css">
 
     <title>CPE Workshop - Docker</title>
 </head>
@@ -108,7 +107,7 @@ $ ssh -p 22001 docker@79.137.110.100
             </section>
 
             <section>
-                <h2>Solution n°2 <i class="fa fa-usb"></i></h2>
+                <h2>Solution n°2</h2>
                 <pre><code>
 $ cp /media/usb/cpe-ws-docker/images.tar ~
 $ sudo docker load -i ~/images.tar
@@ -455,8 +454,8 @@ $ docker ps -a
         </div>
     </div>
 
-    <script src="node_modules/reveal.js/lib/js/head.min.js"></script>
-    <script src="node_modules/reveal.js/js/reveal.js"></script>
+    <script src="public/js/head.min.js"></script>
+    <script src="public/js/reveal.js"></script>
 
     <script>
         Reveal.initialize({
@@ -477,7 +476,7 @@ $ docker ps -a
             maxScale: 1.5,
             dependencies: [
                 { 
-                    src: 'node_modules/reveal.js/plugin/highlight/highlight.js',
+                    src: 'public/js/highlight.js',
                     async: true,
                     callback: function() { hljs.initHighlightingOnLoad(); } 
                 },
