@@ -60,7 +60,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
     if (process.env.NODE_ENV !== 'test') console.log('Listening on 0.0.0.0:3000');
 });
 
