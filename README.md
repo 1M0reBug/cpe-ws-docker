@@ -123,7 +123,7 @@ $ docker run -it --rm -p 8000:3000 --name [nouns,adjectives,verbs] cpe-ws-docker
 Si votre conteneur fonctionne vous devriez voir un résultat similaire à ci-dessus
 dans votre navigateur à l'adresse [http://localhost:8000](http://localhost:8000), ou
 autre si vous utilisez le serveur
-(par exemple [http://79.137.110.100:80001/](http://79.137.110.100:80001/)).
+(par exemple [http://79.137.110.100:8001/](http://79.137.110.100:8001/) ).
 
 Lorsque c'est chose faite vous pouvez aider les autres et sinon
 
@@ -323,6 +323,26 @@ le dispatcher qui permet de taper sur un service répliqué au hasard en allant 
 [http://localhost:8000/{nouns,adjectives,verbs}](http://localhost:8000/nouns).
 L'adresse IP du container qui a pris en charge la requête devrait s'afficher
 dans la réponse en JSON.
+
+### Bundle
+
+Avec la dernière version de docker-compose on va peut-être pouvoir utiliser la fonctionnalité
+bundle qui permet de créer un container contenant l'ensemble des contraintes que l'on a écrite
+dans le fichier `docker-compose.yml`.
+
+Créez un compte sur [hub.docker.com](https://hub.docker.com/) je vous ajouterais à l'équipe `cpewsdocker`,
+ce qui vous permettra de télécharger les images qui j'ai uploadé à l'avance.
+Pour les déployer sur le swarm il faut qu'une image soit associé à un registry docker (que l'on
+verra si nécessaire). 
+
+Si vous êtes un noeud du swarm vous pouvez lancer la commande suivante, en replaçant, `VOTRE_NOM` par
+votre nom.
+
+```shell
+$ docker-compose bundle -o VOTRE_NOM.dab
+$ docker deploy VOTRE_NOM
+$ docker service ls
+```
 
 ## Conclusion
 

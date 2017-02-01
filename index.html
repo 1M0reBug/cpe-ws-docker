@@ -217,15 +217,15 @@ $ git rebase p2-[nous,adjectives,verbs]
                     <h2>Containtes (2/2)</h2>
                     <p>Ajouter ce fichier dans <code>docker/db</code></p>
                     <pre><code>
-CREATE TABLE IF NOT EXISTS [nouns,adjectives,verbs] (
+CREATE TABLE IF NOT EXISTS adjectives (
     id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     word varchar(255) NOT NULL
 );
 
-INSERT INTO [nouns,adjectives,verbs] (word) VALUES ('great');
-INSERT INTO [nouns,adjectives,verbs] (word) VALUES ('boring');
-INSERT INTO [nouns,adjectives,verbs] (word) VALUES ('mesmerizing');
-INSERT INTO [nouns,adjectives,verbs] (word) VALUES ('beautiful');
+INSERT INTO adjectives (word) VALUES ('great');
+INSERT INTO adjectives (word) VALUES ('boring');
+INSERT INTO adjectives (word) VALUES ('mesmerizing');
+INSERT INTO adjectives (word) VALUES ('beautiful');
                     </code></pre>
                 </section>
 
