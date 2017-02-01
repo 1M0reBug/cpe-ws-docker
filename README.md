@@ -179,6 +179,26 @@ d'environnement:
 Enfin, pour permettre aux 2 containers de communiquer entre eux, il va être nécessaire
 de rajouter un flag lors de l'éxécution du container application: `--link [container_name]`
 
+On peut utiliser des commandes comme la suivante:
+
+```shell
+$ docker build -t cpe-ws-docker/[nous,adjectives,verbs]
+$ docker run -e MYSQL_ROOT_PASSWORD="password" --name nouns_db \
+    -d cpe-ws-docker/nouns_db
+$ docker run -e MYSQL_ROOT_PASSWORD="password" --name nouns \
+    -d --link cpe-ws-docker/nouns_db cpe-ws-docker/nouns 
+```
+
+Si on ne souhaite pas utiliser l'option '-e' on peut ajouter une entrée dans le Dockerfile 
+
+```dockerfile
+...
+ENV MYSQL_PASSWORD="password" \
+    MYSQL_DATABASE="nouns"
+...
+```
+Pour optimisation il est préférable de n'utiliser qu'une instruction `ENV`.
+
 [hub-maria]: https://hub.docker/_/MariaDB
 ### Aller plus loin
 
